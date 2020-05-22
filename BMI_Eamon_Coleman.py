@@ -1,10 +1,9 @@
 
+import pandas as pd
 
 import tkinter
 from tkinter import *
 from tkinter import messagebox
-
-
 
 class BMI:
 
@@ -133,7 +132,7 @@ class BMI:
                 self.txtBMIClassResult.insert(END, "Obese")
 
         def export():
-            data = pd.DataFrame('Fruits' ["Apples, ","Lemons", "Lines","Grapes"])
+            data = pd.DataFrame({'Fruits' ["Apples", "Pears", "Bears", "Sraces"]})
 
             datatoexcel = pd.ExcelWriter("FromPython.xlsx", engine='xlswriter')
 
@@ -250,8 +249,7 @@ class BMI:
 
         # ===== RIGHT FRAME 1 =====
 
-        self.lb_your_results = Label(rightframe1, text="Your Results", padx=17, pady=4, bd=1, fg="#000000",
-                                     font=('arial', 17, 'bold'), width=34)
+        self.lb_your_results = Label(rightframe1, text="Your Results", padx=17, pady=4, bd=1, fg="#000000", font=('arial', 17, 'bold'), width=34)
         self.lb_your_results.pack()
 
         # ===== RIGHT FRAME 2 =====
@@ -274,7 +272,6 @@ class BMI:
         self.txtBMIClassResult.grid(row=1, column=1)
 
         # ===========================================================================
-
 
 if __name__ == '__main__':
     root = Tk()
