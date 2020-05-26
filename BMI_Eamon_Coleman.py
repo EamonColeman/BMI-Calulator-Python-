@@ -132,12 +132,9 @@ class BMI:
                 self.txtBMIClassResult.insert(END, "Obese")
 
         def export():
-            data = pd.DataFrame({'Fruits' ["Apples", "Pears", "Bears", "Sraces"]})
 
             datatoexcel = pd.ExcelWriter("FromPython.xlsx", engine='xlswriter')
-
             data.to_excel(datatoexcel, sheet_name='Sheet1')
-
             datatoexcel.save()
             tkinter.messagebox.showwarning("Body Mass Index", "Worked.")
 
