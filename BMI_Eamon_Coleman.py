@@ -1,9 +1,9 @@
-
 import pandas as pd
 
 import tkinter
 from tkinter import *
 from tkinter import messagebox
+
 
 class BMI:
 
@@ -38,9 +38,6 @@ class BMI:
         leftframe4 = Frame(leftframe, bd=5, width=900, height=170, padx=5, pady=6, relief=RIDGE)
         leftframe4.grid(row=4, column=0)
 
-        leftframe5 = Frame(leftframe, bd=5, width=900, height=170, padx=5, pady=6, relief=RIDGE)
-        leftframe5.grid(row=5, column=0)
-
         leftframe6 = Frame(leftframe, bd=5, width=900, height=170, padx=5, pady=6, relief=RIDGE)
         leftframe6.grid(row=6, column=0)
 
@@ -70,12 +67,13 @@ class BMI:
         age = StringVar()
         stone = StringVar()
         pounds = StringVar()
-        kg = StringVar()
+        weight = StringVar()
         feet = StringVar()
         inches = StringVar()
-        cm = StringVar()
+        height = StringVar()
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
+
 
         # =============================  VARIABLES    ===================================
 
@@ -84,10 +82,10 @@ class BMI:
             age.set("")
             stone.set("")
             pounds.set("")
-            kg.set("")
+            weight.set("")
             feet.set("")
             inches.set("")
-            cm.set("")
+            height.set("")
             cm_scale.set(0)
             kg_scale.set(0)
             self.txtBMIResult.delete("1.0", END)
@@ -95,16 +93,23 @@ class BMI:
 
         def Calulate_BMI():
             try:
-                BMI_KG = (kg.get())
-                BMI_CM = (cm.get())
+                BMI_KG = (weight.get())
+                BMI_CM = (height.get())
                 self.txtBMIClassResult.delete("1.0", END)
                 self.txtBMIResult.delete("1.0", END)
 
                 if BMI_KG.isdigit() or BMI_KG.isdigit():
                     BMI_KG = float(BMI_KG)
                     BMI_CM = float(BMI_CM)
+
+
+
                     bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
+
+
                     self.txtBMIResult.insert(END, bmi_val)
+
+
                     cm_scale.set(BMI_CM * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
@@ -112,14 +117,28 @@ class BMI:
                     return True
 
                 else:
-                    tkinter.messagebox.showwarning("Body Mass Index", "That's wrong")
-                    cm.set("")
-                    kg.set("")
+                    tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in both fields.")
+                    height.set("")
+                    weight.set("")
                     self.txtBMIResult.delete("1.0", END)
                     self.txtBMIClassResult.delete("1.0", END)
 
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
+
+        def Metric_Imperial():
+            self.btnMetric.config(state=NORMAL, bg='light coral')
+            self.btnImperial.config(state=DISABLED, bg='springgreen')
+            self.lb_height.config(text="Enter your Height in Inches")
+            self.lb_weight.config(text="Enter your Height in Pounds")
+
+
+        def Metric_Toggle():
+            self.btnMetric.config(state=DISABLED, bg='springgreen')
+            self.btnImperial.config(state=NORMAL, bg='light coral')
+            self.lb_height.config(text="Enter your Height in Meters")
+            self.lb_weight.config(text="Enter your Height in Kilograms")
+
 
         def Calulate_BMI_Class(bmi_val):
             if bmi_val <= 18.5:
@@ -163,50 +182,43 @@ class BMI:
 
         # ===== LEFT FRAME 2 =====
 
-        self.lb_weight = Label(leftframe2, text="Enter your Weight", padx=17, pady=4, bd=1, fg="#000000",
+        self.lb_weight = Label(leftframe2, text="Type", padx=17, pady=4, bd=1, fg="#000000",
                                font=('arial', 17, 'bold'), width=32)
         self.lb_weight.pack()
 
         # ===== LEFT FRAME 3 =====
 
-        self.lb_stones = Label(leftframe3, text="Stones", font=('arial', 15, 'bold'), width=6, bd=2)
-        self.lb_stones.grid(row=1, column=0, padx=5)
-        self.txt_stones = Entry(leftframe3, textvariable=stone, font=('arial', 15, 'bold'), bd=5, width=5, justify=LEFT)
-        self.txt_stones.grid(row=1, column=1, pady=5)
-        self.lb_pounds = Label(leftframe3, text="Pounds", font=('arial', 15, 'bold'), width=6, bd=2, justify=LEFT)
-        self.lb_pounds.grid(row=1, column=2, padx=5)
-        self.txt_pounds = Entry(leftframe3, textvariable=pounds, font=('arial', 15, 'bold'), bd=5, width=7, justify=LEFT)
-        self.txt_pounds.grid(row=1, column=3, pady=5)
-        self.lb_KG = Label(leftframe3, text=" or KGs", font=('arial', 15, 'bold'), width=6, bd=2, justify=LEFT)
-        self.lb_KG.grid(row=1, column=4, padx=5)
-        self.txt_KG = Entry(leftframe3, textvariable=kg, font=('arial', 15, 'bold'), bd=5, width=7, justify=LEFT)
-        self.txt_KG.grid(row=1, column=5, pady=5)
+        self.btnImperial = Button(leftframe3, text="Imperial", padx=4, pady=2, bd=4, width=15, relief="sunken",
+                                  state=DISABLED,
+                                  font=('arial', 17, 'bold'), height=1, bg='springgreen', command=Metric_Imperial)
+        self.btnImperial.bind('<Return>', Calulate_BMI)
+        self.btnImperial.grid(row=0, column=0)
+        self.btnMetric = Button(leftframe3, text="Metirc", padx=4, pady=2, bd=4, width=15, relief="raised",
+                                state=NORMAL,
+                                font=('arial', 17, 'bold'), height=1, bg='light coral', command=Metric_Toggle)
+        self.btnMetric.bind('<Return>', Metric_Toggle)
+        self.btnMetric.grid(row=0, column=1)
 
         # ===== LEFT FRAME 4 =====
 
-        self.lb_weight = Label(leftframe4, text="Enter your Height", padx=17, pady=4, bd=1, fg="#000000",
-                               font=('arial', 17, 'bold'), width=32)
-        self.lb_weight.pack()
+        self.lb_height = Label(leftframe4, text="Enter your Height in Inches", font=('arial', 15, 'bold'),
+                             width=27, bd=2)
+        self.lb_height.grid(row=1, column=0, padx=5)
+        self.txt_feet = Entry(leftframe4, textvariable=height, font=('arial', 15, 'bold'), bd=5, width=10, justify=LEFT)
+        self.txt_feet.grid(row=1, column=1, pady=5)
+        self.lb_weight = Label(leftframe4, text="Enter your Weight in Pounds",
+                               font=('arial', 15, 'bold'), width=27, bd=2, justify=LEFT)
+        self.lb_weight.grid(row=2, column=0, padx=5)
+        self.txt_inches = Entry(leftframe4, textvariable=weight, font=('arial', 15, 'bold'), bd=5, width=10,
+                                justify=LEFT)
+        self.txt_inches.grid(row=2, column=1, pady=5)
 
         # ===== LEFT FRAME 5 =====
 
-        self.lb_feet = Label(leftframe5, text="Feet", font=('arial', 15, 'bold'), width=6, bd=2)
-        self.lb_feet.grid(row=1, column=0, padx=5)
-        self.txt_feet = Entry(leftframe5, textvariable=feet, font=('arial', 15, 'bold'), bd=5, width=5, justify=LEFT)
-        self.txt_feet.grid(row=1, column=1, pady=5)
-        self.lb_inches = Label(leftframe5, text="Inches", font=('arial', 15, 'bold'), width=6, bd=2, justify=LEFT)
-        self.lb_inches.grid(row=1, column=2, padx=5)
-        self.txt_inches = Entry(leftframe5, textvariable=inches, font=('arial', 15, 'bold'), bd=5, width=7, justify=LEFT)
-        self.txt_inches.grid(row=1, column=3, pady=5)
-        self.lb_CM = Label(leftframe5, text="Metres", font=('arial', 15, 'bold'), width=6, bd=2, justify=LEFT)
-        self.lb_CM.grid(row=1, column=4, padx=5)
-        self.lb_CM.bind('<Return>', Calulate_BMI)
-        self.txt_CM = Entry(leftframe5, textvariable=cm, font=('arial', 15, 'bold'), bd=5, width=7, justify=LEFT)
-        self.txt_CM.grid(row=1, column=5, pady=5)
-
         # ===== LEFT FRAME 6 =====
 
-        self.btnBMI = Button(leftframe6, text="Calulate BMI", padx=4, pady=2, bd=4, width=38, font=('arial', 17, 'bold'), height=1, bg='light coral', command=Calulate_BMI)
+        self.btnBMI = Button(leftframe6, text="Calulate BMI", padx=4, pady=2, bd=4, width=38,
+                             font=('arial', 17, 'bold'), height=1, bg='dodgerblue', command=Calulate_BMI)
         self.btnBMI.bind('<Return>', Calulate_BMI)
         self.btnBMI.grid(row=0, column=0)
 
@@ -214,17 +226,21 @@ class BMI:
 
         self.lbBMIResult = Label(leftframe7, text="Your BMI Result is:", font=('arial', 17, 'bold'), bd=2)
         self.lbBMIResult.grid(row=1, column=0, padx=4)
-        self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1, relief='sunk')
+        self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1,
+                                 relief='sunk')
         self.txtBMIResult.grid(row=1, column=1)
 
-        self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11, font=('arial', 17, 'bold'), height=1, bg='goldenrod', command=export)
+        self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11,
+                                font=('arial', 17, 'bold'), height=1, bg='goldenrod', command=export)
         self.btnExport.grid(row=1, column=2)
 
         # ===== LEFT FRAME 8 =====
 
-        self.btnReset = Button(leftframe8, text="Reset", padx=4, pady=2, bd=4, width=19, font=('arial', 17, 'bold'), height=1, command=reset)
+        self.btnReset = Button(leftframe8, text="Reset", padx=4, pady=2, bd=4, width=19, font=('arial', 17, 'bold'),
+                               height=1, command=reset)
         self.btnReset.grid(row=0, column=1, )
-        self.btnExit = Button(leftframe8, text="Exit", padx=4, pady=2, bd=4, width=19, font=('arial', 17, 'bold'), height=1, command=exit)
+        self.btnExit = Button(leftframe8, text="Exit", padx=4, pady=2, bd=4, width=19, font=('arial', 17, 'bold'),
+                              height=1, command=exit)
         self.btnExit.grid(row=0, column=2)
 
         # ===========================    LEFT FRAME BUTTONS  ==================================
@@ -233,7 +249,8 @@ class BMI:
 
         # ===========================    RIGHT FRAME    ==================================
 
-        self.lblBMITable = Label(rightframe0, font=('arial', 20, 'bold'), text="BMI Values", padx=17, pady=4, bd=1, fg="#000000", width=20, bg='light coral').grid(row=0, column=0)
+        self.lblBMITable = Label(rightframe0, font=('arial', 20, 'bold'), text="BMI Values", padx=17, pady=4, bd=1,
+                                 fg="#000000", width=20, bg='light coral').grid(row=0, column=0)
 
         self.txtBMITable = Text(rightframe0, height=10, width=53, bd=16, font=('arial', 12, 'bold'))
         self.txtBMITable.grid(row=1, column=0)
@@ -246,12 +263,15 @@ class BMI:
 
         # ===== RIGHT FRAME 1 =====
 
-        self.lb_your_results = Label(rightframe1, text="Your Results", padx=17, pady=4, bd=1, fg="#000000", font=('arial', 17, 'bold'), width=34)
+        self.lb_your_results = Label(rightframe1, text="Your Results", padx=17, pady=4, bd=1, fg="#000000",
+                                     font=('arial', 17, 'bold'), width=34)
         self.lb_your_results.pack()
 
         # ===== RIGHT FRAME 2 =====
 
-        self.BodyHeight = Scale(rightframe2, variable=cm_scale, from_=0, to=250, length=507, tickinterval=50,state=DISABLED, orient=HORIZONTAL, label="Height in Centimetres", font=('arial', 10, 'bold'))
+        self.BodyHeight = Scale(rightframe2, variable=cm_scale, from_=0, to=250, length=507, tickinterval=50,
+                                state=DISABLED, orient=HORIZONTAL, label="Height in Centimetres",
+                                font=('arial', 10, 'bold'))
         self.BodyHeight.grid(row=1, column=1)
 
         # ===== RIGHT FRAME 3 =====
@@ -263,12 +283,14 @@ class BMI:
 
         # ===== RIGHT FRAME 4 =====
 
-        self.lbBMIClassResult = Label(rightframe4, text="Your BMI Class is:", font=('arial', 17, 'bold'), bd=2)
+        self.lbBMIClassResult = Label(rightframe4, text="Your BMI Class is:", state=DISABLED,  font=('arial', 17, 'bold'), bd=2)
         self.lbBMIClassResult.grid(row=1, column=0, padx=4)
-        self.txtBMIClassResult = Text(rightframe4, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=20, height=1, bg='lime green', relief='sunk')
+        self.txtBMIClassResult = Text(rightframe4, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=20,
+                                      height=1, bg='lime green', relief='sunk')
         self.txtBMIClassResult.grid(row=1, column=1)
 
         # ===========================================================================
+
 
 if __name__ == '__main__':
     root = Tk()
