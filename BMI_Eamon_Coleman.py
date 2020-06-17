@@ -65,11 +65,7 @@ class BMI:
 
         name = StringVar()
         age = StringVar()
-        stone = StringVar()
-        pounds = StringVar()
         weight = StringVar()
-        feet = StringVar()
-        inches = StringVar()
         height = StringVar()
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
@@ -80,16 +76,14 @@ class BMI:
         def reset():
             name.set("")
             age.set("")
-            stone.set("")
-            pounds.set("")
             weight.set("")
-            feet.set("")
-            inches.set("")
             height.set("")
             cm_scale.set(0)
             kg_scale.set(0)
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
+
+
 
         def Calulate_BMI():
             try:
@@ -131,14 +125,16 @@ class BMI:
             self.btnImperial.config(state=DISABLED, bg='springgreen')
             self.lb_height.config(text="Enter your Height in Inches")
             self.lb_weight.config(text="Enter your Height in Pounds")
-
+            height.set("")
+            weight.set("")
 
         def Metric_Toggle():
             self.btnMetric.config(state=DISABLED, bg='springgreen')
             self.btnImperial.config(state=NORMAL, bg='light coral')
             self.lb_height.config(text="Enter your Height in Meters")
             self.lb_weight.config(text="Enter your Height in Kilograms")
-
+            height.set("")
+            weight.set("")
 
         def Calulate_BMI_Class(bmi_val):
             if bmi_val <= 18.5:
