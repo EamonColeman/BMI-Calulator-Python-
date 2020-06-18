@@ -4,6 +4,9 @@ import tkinter
 from tkinter import *
 from tkinter import messagebox
 
+import csv
+
+
 
 class BMI:
 
@@ -76,8 +79,7 @@ class BMI:
         cm = StringVar()
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
-        weight = StringVar()
-        height = StringVar()
+        bmi_result = StringVar()
 
         # =============================  VARIABLES    ===================================
 
@@ -95,112 +97,101 @@ class BMI:
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
 
-        def metric_or_imperial():
-            button_state = (self.btnmetric.get())
-            if self.btnmetri(state=DISABLED):
-                Calulate_BMI
+        def metric_or_imperial__class():
+            if self.btnImperial["state"] == DISABLED:
+                Calulate_BMI_IMPERIAL()
 
             else:
-                tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
+                Calulate_BMI()
 
-        def Calulate_BMI_IMPERIAL():
+        def minimum_checker_imperial():
             CHECK_FEET = (feet.get())
             CHECK_STONES = (stone.get())
             CHECK_FEET = float(CHECK_FEET)
             CHECK_STONES = float(CHECK_STONES)
-
-            if CHECK_FEET <= 0.5 or CHECK_STONES <= 0.5 :
+            if CHECK_FEET <= 0.5 or CHECK_STONES <= 0.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
-                stone.set("")
-                feet.set("")
-                pounds.set("")
-                inches.set("")
+
             elif CHECK_FEET > 200 or CHECK_STONES > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
-                stone.set("")
-                feet.set("")
-                pounds.set("")
-                inches.set("")
-          #  elif CHECK_FEET or CHECK_STONES or CHECK_FEET or CHECK_FEET == "":
-              #  tkinter.messagebox.showwarning("Body Mass Index", "Error! Please fill out all fields.")
 
-            else:
-                try:
-                    BMI_Stone = (stone.get())
-                    BMI_Pounds = (pounds.get())
-                    BMI_Feet = (feet.get())
-                    BMI_Inches = (feet.get())
-                    self.txtBMIClassResult.delete("1.0", END)
+
+        def Calulate_BMI_IMPERIAL():
+
+            try:
+                BMI_Stone = (stone.get())
+                BMI_Pounds = (pounds.get())
+                BMI_Feet = (feet.get())
+                BMI_Inches = (feet.get())
+                self.txtBMIClassResult.delete("1.0", END)
+                self.txtBMIResult.delete("1.0", END)
+
+                if (BMI_Stone.isdigit() or BMI_Pounds.isdigit()) and (BMI_Feet.isdigit() or BMI_Inches()):
+
+                    BMI_Stone = float(BMI_Stone)
+                    BMI_Pounds = float(BMI_Pounds)
+                    BMI_Feet = float(BMI_Feet)
+                    BMI_Inches = float(BMI_Inches)
+
+                    BMI_Pounds = BMI_Pounds + (BMI_Stone * 14)
+                    BMI_Inches = BMI_Inches + (BMI_Feet * 12)
+                    # bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
+                    bmi_val = float(BMI_Pounds * 703) / (BMI_Inches ** 2)
+                    self.txtBMIResult.insert(END, bmi_val)
+                    minimum_checker_imperial()
+                    cm_scale.set(BMI_Inches * 2.54)
+                    kg_scale.set((BMI_Pounds / 2.2) * 1000)
+                    Calulate_BMI_Class(bmi_val)
+
+                    return True
+
+                else:
+                    tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in all fields.")
                     self.txtBMIResult.delete("1.0", END)
+                    self.txtBMIClassResult.delete("1.0", END)
 
-                    if BMI_Stone.isdigit() or BMI_Pounds.isdigit() or BMI_Feet.isdigit() or BMI_Inches():
-                        BMI_Stone = float(BMI_Stone)
-                        BMI_Pounds = float(BMI_Pounds)
-                        BMI_Feet = float(BMI_Feet)
-                        BMI_Inches = float(BMI_Inches)
-                        BMI_Pounds = BMI_Pounds + BMI_Stone * 14
-                        BMI_Inches = BMI_Inches + BMI_Feet * 12
-                        # bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
-                        bmi_val = float('%.2f' % (BMI_Pounds / (BMI_Inches * BMI_Inches) * 703))
-                        self.txtBMIResult.insert(END, bmi_val)
-                        cm_scale.set(BMI_Inches * 2.54)
-                        kg_scale.set((BMI_Pounds / 2.2) * 1000)
-                        Calulate_BMI_Class(bmi_val)
+            except ZeroDivisionError:
+                tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
-                        return True
-
-                    else:
-                        tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in both fields.")
-                        height.set("")
-                        weight.set("")
-                        self.txtBMIResult.delete("1.0", END)
-                        self.txtBMIClassResult.delete("1.0", END)
-
-                except ZeroDivisionError:
-                    tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
-
-        def Calulate_BMI():
+        def minimum_checker_metric():
             CHECK_KG = (kg.get())
             CHECK_CM = (cm.get())
             CHECK_KG = float(CHECK_KG)
             CHECK_CM = float(CHECK_CM)
-            if CHECK_KG <= 20 or CHECK_CM <= 0.5:
+            if CHECK_CM <= 0.5 or CHECK_KG <= 1:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
-                cm.set("")
-                kg.set("")
+                exit(Calulate_BMI)
             elif CHECK_KG > 200 or CHECK_CM > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
-                cm.set("")
-                kg.set("")
-            else:
+                exit(Calulate_BMI)
 
-                try:
-                    BMI_KG = (kg.get())
-                    BMI_CM = (cm.get())
-                    self.txtBMIClassResult.delete("1.0", END)
+        def Calulate_BMI():
+
+            try:
+                BMI_KG = (kg.get())
+                BMI_CM = (cm.get())
+                self.txtBMIClassResult.delete("1.0", END)
+                self.txtBMIResult.delete("1.0", END)
+
+                if BMI_KG.isdigit() or BMI_KG.isdigit():
+                    BMI_KG = float(BMI_KG)
+                    BMI_CM = float(BMI_CM)
+                    bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
+                    self.txtBMIResult.insert(END, bmi_val)
+                    minimum_checker_metric()
+                    cm_scale.set(BMI_CM * 100)
+                    kg_scale.set(BMI_KG)
+                    Calulate_BMI_Class(bmi_val)
+
+                    return True
+
+                else:
+                    tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in both fields.")
                     self.txtBMIResult.delete("1.0", END)
+                    self.txtBMIClassResult.delete("1.0", END)
 
-                    if BMI_KG.isdigit() or BMI_KG.isdigit():
-                        BMI_KG = float(BMI_KG)
-                        BMI_CM = float(BMI_CM)
-                        bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
-                        #  bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM) * 703))
-                        self.txtBMIResult.insert(END, bmi_val)
-                        cm_scale.set(BMI_CM * 100)
-                        kg_scale.set(BMI_KG)
-                        Calulate_BMI_Class(bmi_val)
-
-                        return True
-
-                    else:
-                        tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in both fields.")
-                        height.set("")
-                        weight.set("")
-                        self.txtBMIResult.delete("1.0", END)
-                        self.txtBMIClassResult.delete("1.0", END)
-
-                except ZeroDivisionError:
-                    tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
+            except ZeroDivisionError:
+                tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
         def Metric_Imperial():
             self.btnMetric.config(state=NORMAL, bg='light coral')
@@ -213,6 +204,7 @@ class BMI:
             inches.set("")
             cm_scale.set(0)
             kg_scale.set(0)
+
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
             self.txt_CM.config(bg='gray', state=DISABLED)
@@ -253,10 +245,22 @@ class BMI:
                 self.txtBMIClassResult.insert(END, "Obese")
 
         def export():
-            datatoexcel = pd.ExcelWriter("FromPython.xlsx", engine='xlswriter')
-            data.to_excel(datatoexcel, sheet_name='Sheet1')
-            datatoexcel.save()
-            tkinter.messagebox.showwarning("Body Mass Index", "Worked.")
+
+            try:
+                CSV_NAME = (name.get())
+                CSV_AGE = (age.get())
+                CSV_BMI = (bmi_val.get())
+
+                with open('your_bmi_result', 'w', newline='') as f:
+                    thewriter = csv.writer(f)
+                    thewriter.writerow(['Name', 'Age', 'BMI'])
+                    thewriter.writerow([CSV_NAME, CSV_AGE, CSV_BMI])
+
+                tkinter.messagebox.showinfo("Body Mass Index", "Your results have been saved to a CSV file!")
+
+            except NameError:
+                tkinter.messagebox.showwarning("Body Mass Index", "Messing information, Please fill all fields.")
+
 
         def exit():
             messagebox.askokcancel("Body Mass Index", "Are you sure you want to exit?")
@@ -337,16 +341,15 @@ class BMI:
         # ===== LEFT FRAME 6 =====
 
         self.btnBMI = Button(leftframe6, text="Calulate BMI", padx=4, pady=2, bd=4, width=38,
-                             font=('arial', 17, 'bold'), height=1, bg='dodgerblue', command=Calulate_BMI_IMPERIAL)
-        self.btnBMI.bind('<Return>', Calulate_BMI_IMPERIAL)
+                             font=('arial', 17, 'bold'), height=1, bg='dodgerblue', command=metric_or_imperial__class)
+        self.btnBMI.bind('<Return>', metric_or_imperial__class)
         self.btnBMI.grid(row=0, column=0)
 
         # ===== LEFT FRAME 7 =====
 
         self.lbBMIResult = Label(leftframe7, text="Your BMI Result is:", font=('arial', 17, 'bold'), bd=2)
         self.lbBMIResult.grid(row=1, column=0, padx=4)
-        self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1,
-                                 relief='sunk')
+        self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1, relief='sunk')
         self.txtBMIResult.grid(row=1, column=1)
 
         self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11,
@@ -400,11 +403,13 @@ class BMI:
 
         self.lbBMIClassResult = Label(rightframe4, text="Your BMI Class is:", font=('arial', 17, 'bold'), bd=2)
         self.lbBMIClassResult.grid(row=1, column=0, padx=4)
-        self.txtBMIClassResult = Text(rightframe4, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5,  width=20,
+        self.txtBMIClassResult = Text(rightframe4, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=20,
                                       height=1, bg='lime green', relief='sunk')
         self.txtBMIClassResult.grid(row=1, column=1)
 
         # ===========================================================================
+
+
 if __name__ == '__main__':
     root = Tk()
     application = BMI(root)
