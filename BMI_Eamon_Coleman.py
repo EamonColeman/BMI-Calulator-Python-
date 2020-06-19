@@ -96,6 +96,7 @@ class BMI:
             kg_scale.set(0)
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
+            self.btnExport.config(state=DISABLED, bg='gray')
 
         def metric_or_imperial__class():
             if self.btnImperial["state"] == DISABLED:
@@ -135,13 +136,16 @@ class BMI:
 
                     BMI_Pounds = BMI_Pounds + (BMI_Stone * 14)
                     BMI_Inches = BMI_Inches + (BMI_Feet * 12)
-                    # bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
+
                     bmi_val = float(BMI_Pounds * 703) / (BMI_Inches ** 2)
                     self.txtBMIResult.insert(END, bmi_val)
                     minimum_checker_imperial()
                     cm_scale.set(BMI_Inches * 2.54)
                     kg_scale.set((BMI_Pounds / 2.2) * 1000)
                     Calulate_BMI_Class(bmi_val)
+
+                    export(bmi_val)
+                    self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
 
                     return True
 
@@ -182,6 +186,8 @@ class BMI:
                     cm_scale.set(BMI_CM * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
+                    export(bmi_val)
+                    self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
 
                     return True
 
@@ -194,16 +200,9 @@ class BMI:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
         def Metric_Imperial():
-            self.btnMetric.config(state=NORMAL, bg='light coral')
-            self.btnImperial.config(state=DISABLED, bg='springgreen')
-            cm.set("")
-            kg.set("")
-            feet.set("")
-            stone.set("")
-            pounds.set("")
-            inches.set("")
-            cm_scale.set(0)
-            kg_scale.set(0)
+            self.btnMetric.config(state=NORMAL, bg='light coral', relief="raised")
+            self.btnImperial.config(state=DISABLED, bg='springgreen', relief="sunken")
+            reset()
 
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
@@ -215,16 +214,9 @@ class BMI:
             self.txt_feet.config(bg='white', state=NORMAL)
 
         def Metric_Toggle():
-            self.btnMetric.config(state=DISABLED, bg='springgreen')
-            self.btnImperial.config(state=NORMAL, bg='light coral')
-            cm.set("")
-            kg.set("")
-            feet.set("")
-            stone.set("")
-            pounds.set("")
-            inches.set("")
-            cm_scale.set(0)
-            kg_scale.set(0)
+            self.btnMetric.config(state=DISABLED, bg='springgreen', relief="sunken")
+            self.btnImperial.config(state=NORMAL, bg='light coral', relief="raised")
+            reset()
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
             self.txt_stones.config(bg='gray', state=DISABLED)
@@ -244,17 +236,17 @@ class BMI:
             else:
                 self.txtBMIClassResult.insert(END, "Obese")
 
-        def export():
+        def export(bmi_val):
 
             try:
                 CSV_NAME = (name.get())
                 CSV_AGE = (age.get())
-                CSV_BMI = (bmi_val.get())
+
 
                 with open('your_bmi_result', 'w', newline='') as f:
                     thewriter = csv.writer(f)
                     thewriter.writerow(['Name', 'Age', 'BMI'])
-                    thewriter.writerow([CSV_NAME, CSV_AGE, CSV_BMI])
+                    thewriter.writerow([CSV_NAME, CSV_AGE, bmi_val])
 
                 tkinter.messagebox.showinfo("Body Mass Index", "Your results have been saved to a CSV file!")
 
@@ -352,8 +344,8 @@ class BMI:
         self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1, relief='sunk')
         self.txtBMIResult.grid(row=1, column=1)
 
-        self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11,
-                                font=('arial', 17, 'bold'), height=1, bg='goldenrod', command=export)
+        self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11, state=DISABLED, bg='gray', relief="sunken",
+                                font=('arial', 17, 'bold'), height=1, command=export)
         self.btnExport.grid(row=1, column=2)
 
         # ===== LEFT FRAME 8 =====
