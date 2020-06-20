@@ -79,7 +79,7 @@ class BMI:
         cm = StringVar()
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
-        bmi_result = StringVar()
+        bmi_val = "1.1"
 
         # =============================  VARIABLES    ===================================
 
@@ -96,7 +96,7 @@ class BMI:
             kg_scale.set(0)
             self.txtBMIResult.delete("1.0", END)
             self.txtBMIClassResult.delete("1.0", END)
-            self.btnExport.config(state=DISABLED, bg='gray')
+            self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
 
         def metric_or_imperial__class():
             if self.btnImperial["state"] == DISABLED:
@@ -186,7 +186,8 @@ class BMI:
                     cm_scale.set(BMI_CM * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
-                    export(bmi_val)
+
+
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
 
                     return True
@@ -203,9 +204,6 @@ class BMI:
             self.btnMetric.config(state=NORMAL, bg='light coral', relief="raised")
             self.btnImperial.config(state=DISABLED, bg='springgreen', relief="sunken")
             reset()
-
-            self.txtBMIResult.delete("1.0", END)
-            self.txtBMIClassResult.delete("1.0", END)
             self.txt_CM.config(bg='gray', state=DISABLED)
             self.txt_KG.config(bg='gray', state=DISABLED)
             self.txt_stones.config(bg='white', state=NORMAL)
@@ -217,8 +215,6 @@ class BMI:
             self.btnMetric.config(state=DISABLED, bg='springgreen', relief="sunken")
             self.btnImperial.config(state=NORMAL, bg='light coral', relief="raised")
             reset()
-            self.txtBMIResult.delete("1.0", END)
-            self.txtBMIClassResult.delete("1.0", END)
             self.txt_stones.config(bg='gray', state=DISABLED)
             self.txt_pounds.config(bg='gray', state=DISABLED)
             self.txt_inches.config(bg='gray', state=DISABLED)
@@ -237,6 +233,10 @@ class BMI:
                 self.txtBMIClassResult.insert(END, "Obese")
 
         def export(bmi_val):
+            if self.btnExport["state"] == DISABLED:
+                export_exe(bmi_val)
+
+        def export_exe():
 
             try:
                 CSV_NAME = (name.get())
@@ -252,7 +252,6 @@ class BMI:
 
             except NameError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Messing information, Please fill all fields.")
-
 
         def exit():
             messagebox.askokcancel("Body Mass Index", "Are you sure you want to exit?")
@@ -345,7 +344,7 @@ class BMI:
         self.txtBMIResult.grid(row=1, column=1)
 
         self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11, state=DISABLED, bg='gray', relief="sunken",
-                                font=('arial', 17, 'bold'), height=1, command=export)
+                                font=('arial', 17, 'bold'), height=1, command=export_exe)
         self.btnExport.grid(row=1, column=2)
 
         # ===== LEFT FRAME 8 =====
