@@ -4,8 +4,9 @@ import tkinter
 from tkinter import *
 from tkinter import messagebox
 
-import csv
+from datetime import datetime
 
+import csv
 
 
 class BMI:
@@ -79,13 +80,26 @@ class BMI:
         cm = StringVar()
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
-        bmi_val = float
-
-
 
         # =============================  VARIABLES    ===================================
 
         def reset():
+
+            inches.set("")
+            feet.set("")
+            pounds.set("")
+            stone.set("")
+            kg.set("")
+            cm.set("")
+            name.set("")
+            age.set("")
+            cm_scale.set(0)
+            kg_scale.set(0)
+            self.txtBMIResult.delete("1.0", END)
+            self.txtBMIClassResult.delete("1.0", END)
+            self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
+
+        def reset_toggle():
 
             inches.set("")
             feet.set("")
@@ -118,7 +132,6 @@ class BMI:
             elif CHECK_FEET > 200 or CHECK_STONES > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
 
-
         def Calulate_BMI_IMPERIAL():
 
             try:
@@ -129,8 +142,6 @@ class BMI:
 
                 self.txtBMIClassResult.delete("1.0", END)
                 self.txtBMIResult.delete("1.0", END)
-
-
 
                 if BMI_Stone.isdigit() or BMI_Feet.isdigit():
                     BMI_Stone = float(BMI_Stone)
@@ -195,8 +206,6 @@ class BMI:
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
 
-
-
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
 
                     return True
@@ -212,7 +221,7 @@ class BMI:
         def Metric_Imperial():
             self.btnMetric.config(state=NORMAL, bg='light coral', relief="raised")
             self.btnImperial.config(state=DISABLED, bg='springgreen', relief="sunken")
-            reset()
+            reset_toggle
             self.txt_CM.config(bg='gray', state=DISABLED)
             self.txt_KG.config(bg='gray', state=DISABLED)
             self.txt_stones.config(bg='white', state=NORMAL)
@@ -223,7 +232,7 @@ class BMI:
         def Metric_Toggle():
             self.btnMetric.config(state=DISABLED, bg='springgreen', relief="sunken")
             self.btnImperial.config(state=NORMAL, bg='light coral', relief="raised")
-            reset()
+            reset_toggle
             self.txt_stones.config(bg='gray', state=DISABLED)
             self.txt_pounds.config(bg='gray', state=DISABLED)
             self.txt_inches.config(bg='gray', state=DISABLED)
@@ -241,22 +250,36 @@ class BMI:
             else:
                 self.txtBMIClassResult.insert(END, "Obese")
 
-        def export(bmi_val):
-            if self.btnExport["state"] == DISABLED:
-                export_exe(bmi_val)
-
-        def export_exe(bmi_val):
+        def export_exe():
 
             try:
                 CSV_NAME = (name.get())
                 CSV_AGE = (age.get())
-
-
+                CSV_Feet = (feet.get())
+                CSV_Inches = (inches.get())
+                CSV_CM = (cm.get())
+                CSV_KG = (kg.get())
+                CSV_Stone = (stone.get())
+                CSV_Pounds = (pounds.get())
+                bmi_val = self.txtBMIResult.get("1.0", 'end-1c')
+                bmi_class = self.txtBMIClassResult.get("1.0", 'end-1c')
+                current_time = datetime.now().time()
 
                 with open('your_bmi_result', 'w', newline='') as f:
                     thewriter = csv.writer(f)
-                    thewriter.writerow(['Name', 'Age', 'BMI'])
-                    thewriter.writerow([CSV_NAME, CSV_AGE, bmi_val])
+                    thewriter.writerow(['Name', 'Age', 'BMI', 'BMI Class'])
+                    thewriter.writerow([CSV_NAME, CSV_AGE, bmi_val, bmi_class])
+                    thewriter.writerow([])
+
+                    if self.btnImperial["state"] == DISABLED:
+                        thewriter.writerow(['Your height is {} feet and {} inches.'.format(CSV_Feet, CSV_Inches)])
+                        thewriter.writerow(['Your weight is {} stone and {} pounds.'.format(CSV_Stone, CSV_Pounds)])
+                    else:
+                        thewriter.writerow(['Your height is {} metres.'.format(CSV_CM)])
+                        thewriter.writerow(['Your weight is {} KGs.'.format(CSV_KG)])
+
+                    thewriter.writerow([])
+                    thewriter.writerow(['Time', current_time])
 
                 tkinter.messagebox.showinfo("Body Mass Index", "Your results have been saved to a CSV file!")
 
@@ -299,7 +322,7 @@ class BMI:
                                   font=('arial', 17, 'bold'), height=1, bg='springgreen', command=Metric_Imperial)
         self.btnImperial.bind('<Return>', Calulate_BMI)
         self.btnImperial.grid(row=0, column=0)
-        self.btnMetric = Button(leftframe3, text="Metirc", padx=4, pady=2, bd=4, width=15, relief="raised",
+        self.btnMetric = Button(leftframe3, text="Metric", padx=4, pady=2, bd=4, width=15, relief="raised",
                                 state=NORMAL,
                                 font=('arial', 17, 'bold'), height=1, bg='light coral', command=Metric_Toggle)
         self.btnMetric.bind('<Return>', Metric_Toggle)
@@ -350,10 +373,12 @@ class BMI:
 
         self.lbBMIResult = Label(leftframe7, text="Your BMI Result is:", font=('arial', 17, 'bold'), bd=2)
         self.lbBMIResult.grid(row=1, column=0, padx=4)
-        self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1, relief='sunk')
+        self.txtBMIResult = Text(leftframe7, padx=15, pady=5, font=('arial', 17, 'bold'), bd=5, width=7, height=1,
+                                 relief='sunk')
         self.txtBMIResult.grid(row=1, column=1)
 
-        self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11, state=DISABLED, bg='gray', relief="sunken",
+        self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11, state=DISABLED,
+                                bg='gray', relief="sunken",
                                 font=('arial', 17, 'bold'), height=1, command=export_exe)
         self.btnExport.grid(row=1, column=2)
 
