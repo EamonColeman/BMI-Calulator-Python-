@@ -139,14 +139,14 @@ class BMI:
                     BMI_Inches = float(BMI_Inches)
 
                     BMI_Pounds = BMI_Pounds // 2.2
-                    BMI_Stone = BMI_Stone * 6.3
-                    BMI_Feet = BMI_Feet * 0.3
-                    BMI_Inches = BMI_Inches * 2.54
+                    BMI_Stone = BMI_Stone * 6.35029
+                    BMI_Feet = BMI_Feet * 0.3048
+                    BMI_Inches = BMI_Inches * 0.0254
 
                     BMI_KG = BMI_Stone + BMI_Pounds
                     BMI_CM = BMI_Feet + BMI_Inches
 
-                    bmi_val = float(round(BMI_KG / (BMI_CM * BMI_CM), 2))
+                    bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
                     self.txtBMIResult.insert(END, bmi_val)
                     minimum_checker_imperial()
                     cm_scale.set(BMI_CM * 100)
@@ -164,8 +164,6 @@ class BMI:
 
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
-
-
 
         def minimum_checker_metric():
             CHECK_KG = (kg.get())
