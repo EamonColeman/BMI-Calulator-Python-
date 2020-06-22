@@ -80,8 +80,10 @@ class BMI:
 
         # =============================  FUNCTIONS    ===================================
 
-        # Resets field entries
         def reset():
+            """
+            Resets field entries
+            """
             inches.set("")
             feet.set("")
             pounds.set("")
@@ -96,8 +98,10 @@ class BMI:
             self.txtBMIClassResult.delete("1.0", END)
             self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
 
-        # Resets field entries excluding Name/Age
         def reset_toggle():
+            """
+            Resets field entries excluding Name/Age
+            """
             inches.set("")
             feet.set("")
             pounds.set("")
@@ -110,33 +114,48 @@ class BMI:
             self.txtBMIClassResult.delete("1.0", END)
             self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
 
-        # Determines if the user has selected imperial or metric
         def metric_or_imperial__class():
+            """
+            Determines if the user has selected imperial or metric
+            """
             if self.btnImperial["state"] == DISABLED:
                 Calulate_BMI_IMPERIAL()
             else:
                 Calulate_BMI()
 
-        # Catches if the user has input a too small/large value in the imperial fields
         def minimum_checker_imperial():
+            """
+            Catches if the user has input a too small/large value in the imperial fields
+            """
             CHECK_FEET = (feet.get())
             CHECK_STONES = (stone.get())
             CHECK_FEET = float(CHECK_FEET)
             CHECK_STONES = float(CHECK_STONES)
             if CHECK_FEET <= 0.5 or CHECK_STONES <= 0.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
-
             elif CHECK_FEET > 200 or CHECK_STONES > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
 
         def Calulate_BMI_IMPERIAL():
+            """
+            Gets the users inputs from the imperial fields, converts them to a float then converts them to their metric
+            value. (Feet/Inches to Metres and Stones/Pounds to Kg).
+            Performs BMI calculation and populates result to "txtBMIResult".
+            Updates scale value in cm/kg scale.
+            Calls Calulate_BMI_Class(bmi_val) to determine and update the users BMI Class.
+            Activates the export button allowing the user to store their results in a CSV. file.
 
+            Exception Handling,
+            1. If you user enters a zero for their height this will be caught with the except ZeroDivisionError line.
+            2. If a none digit is entered by the user this be caught in the .isdigit() line.
+            3. A minimum/maximum amount has been defined in the "checker" functions and will be caught if entered.
+
+            """
             try:
                 BMI_Stone = (stone.get())
                 BMI_Pounds = (pounds.get())
                 BMI_Feet = (feet.get())
                 BMI_Inches = (inches.get())
-
                 self.txtBMIClassResult.delete("1.0", END)
                 self.txtBMIResult.delete("1.0", END)
 
@@ -158,7 +177,6 @@ class BMI:
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
-
                     return True
 
                 else:
@@ -170,6 +188,9 @@ class BMI:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
         def minimum_checker_metric():
+            """
+            Catches if the user has input a too small/large value in the imperial fields
+            """
             CHECK_KG = (kg.get())
             CHECK_CM = (cm.get())
             CHECK_KG = float(CHECK_KG)
@@ -182,6 +203,13 @@ class BMI:
                 exit(Calulate_BMI)
 
         def Calulate_BMI():
+            """
+            Gets the users inputs from the metric fields, converts them to a float.
+            Performs BMI calculation and populates result to "txtBMIResult".
+            Updates scale value in cm/kg scale.
+            Calls Calulate_BMI_Class(bmi_val) to determine and update the users BMI Class.
+            Activates the export button allowing the user to store their results in a CSV. file.
+            """
 
             try:
                 BMI_KG = (kg.get())
@@ -209,8 +237,10 @@ class BMI:
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
-        # This toggles the imperial fields to become active and disables the metric
         def Metric_Imperial():
+            """
+            Toggles the imperial fields to become active and disables the metric
+            """
             self.btnMetric.config(state=NORMAL, bg='light coral', relief="raised")
             self.btnImperial.config(state=DISABLED, bg='springgreen', relief="sunken")
             reset_toggle()
@@ -221,11 +251,10 @@ class BMI:
             self.txt_inches.config(bg='white', state=NORMAL)
             self.txt_feet.config(bg='white', state=NORMAL)
 
-        # This toggles the metric fields to become active and disables the imperial
         def Metric_Toggle():
-            '''
-             blah b lahab
-            '''
+            """
+             This toggles the metric fields to become active and disables the imperial
+            """
             self.btnMetric.config(state=DISABLED, bg='springgreen', relief="sunken")
             self.btnImperial.config(state=NORMAL, bg='light coral', relief="raised")
             reset_toggle()
@@ -236,10 +265,10 @@ class BMI:
             self.txt_CM.config(bg='white', state=NORMAL)
             self.txt_KG.config(bg='white', state=NORMAL)
 
-
-
-        #
         def Calulate_BMI_Class(bmi_val):
+            """
+            With the bmi_val that is passed through the users BMI is determined with an If statement
+            """
             if bmi_val <= 18.5:
                 self.txtBMIClassResult.insert(END, "Under Weight")
             elif 18.6 < bmi_val < 24.9:
@@ -249,8 +278,10 @@ class BMI:
             else:
                 self.txtBMIClassResult.insert(END, "Obese")
 
-        # Exports the users input/results to a local CSV file
         def export_exe():
+            """
+            Exports the users input/results to a local CSV file
+            """
             try:
                 CSV_NAME = (name.get())
                 CSV_AGE = (age.get())
@@ -285,8 +316,10 @@ class BMI:
             except NameError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Missing information, Please fill all fields.")
 
-        # Exits the program
         def exit():
+            """
+            Exits the program
+            """
             messagebox.askokcancel("Body Mass Index", "Are you sure you want to exit?")
             if exit > 0:
                 root.destroy()
