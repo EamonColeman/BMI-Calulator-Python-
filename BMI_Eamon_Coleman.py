@@ -133,8 +133,10 @@ class BMI:
             CHECK_STONES = float(CHECK_STONES)
             if CHECK_FEET <= 0.5 or CHECK_STONES <= 0.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
+                reset_toggle()
             elif CHECK_FEET > 200 or CHECK_STONES > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
+                reset_toggle()
 
         def Calulate_BMI_IMPERIAL():
             """
@@ -149,7 +151,6 @@ class BMI:
             1. If you user enters a zero for their height this will be caught with the except ZeroDivisionError line.
             2. If a none digit is entered by the user this be caught in the .isdigit() line.
             3. A minimum/maximum amount has been defined in the "checker" functions and will be caught if entered.
-
             """
             try:
                 BMI_Stone = (stone.get())
@@ -172,10 +173,10 @@ class BMI:
                     BMI_CM = BMI_Feet + BMI_Inches
                     bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
                     self.txtBMIResult.insert(END, bmi_val)
-                    minimum_checker_imperial()
                     cm_scale.set(BMI_CM * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
+                    minimum_checker_imperial()
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     return True
 
@@ -197,10 +198,10 @@ class BMI:
             CHECK_CM = float(CHECK_CM)
             if CHECK_CM <= 0.5 or CHECK_KG <= 1:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
-                exit(Calulate_BMI)
+                reset_toggle()
             elif CHECK_KG > 200 or CHECK_CM > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
-                exit(Calulate_BMI)
+                reset_toggle()
 
         def Calulate_BMI():
             """
@@ -209,8 +210,12 @@ class BMI:
             Updates scale value in cm/kg scale.
             Calls Calulate_BMI_Class(bmi_val) to determine and update the users BMI Class.
             Activates the export button allowing the user to store their results in a CSV. file.
-            """
 
+            Exception Handling,
+            1. If you user enters a zero for their height this will be caught with the except ZeroDivisionError line.
+            2. If a none digit is entered by the user this be caught in the .isdigit() line.
+            3. A minimum/maximum amount has been defined in the "checker" functions and will be caught if entered.
+            """
             try:
                 BMI_KG = (kg.get())
                 BMI_CM = (cm.get())
@@ -222,10 +227,10 @@ class BMI:
                     BMI_CM = float(BMI_CM)
                     bmi_val = float('%.2f' % (BMI_KG / (BMI_CM * BMI_CM)))
                     self.txtBMIResult.insert(END, bmi_val)
-                    minimum_checker_metric()
                     cm_scale.set(BMI_CM * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
+                    minimum_checker_metric()
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     return True
 
@@ -320,10 +325,8 @@ class BMI:
             """
             Exits the program
             """
-            messagebox.askokcancel("Body Mass Index", "Are you sure you want to exit?")
-            if exit > 0:
-                root.destroy()
-                return
+            global root
+            root.quit()
 
         # ===========================    LEFT FRAMES    ==================================
 
