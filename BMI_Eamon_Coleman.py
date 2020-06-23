@@ -121,33 +121,33 @@ class BMI:
             Determines if the user has selected imperial or metric
             """
             if self.btnImperial["state"] == DISABLED:
-                Calulate_BMI_IMPERIAL()
+                calulate_BMI_IMPERIAL()
             else:
-                Calulate_BMI()
+                calulate_BMI()
 
         def imperial_checker():
             """
             Catches if the user has input a too small/large value in the imperial fields
             """
-            CHECK_FEET = (feet.get())
-            CHECK_STONES = (stone.get())
-            CHECK_FEET = float(CHECK_FEET)
-            CHECK_STONES = float(CHECK_STONES)
-            if CHECK_FEET <= 2 or CHECK_STONES <= 0.5:
+            check_feet = (feet.get())
+            check_stone = (stone.get())
+            check_feet = float(check_feet)
+            check_stone = float(check_stone)
+            if check_feet <= 2 or check_stone <= 0.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
                 reset_toggle()
-            elif CHECK_FEET > 9 or CHECK_STONES > 99:
+            elif check_feet > 9 or check_stone > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
 
-        def Calulate_BMI_IMPERIAL():
+        def calulate_BMI_IMPERIAL():
             """
             Gets the users inputs from the imperial fields, converts them to a float then converts them to their metric
             value. (Feet/Inches to Metres and Stones/Pounds to Kg).
             Performs BMI calculation and populates result to "txtBMIResult".
             Updates scale value in metres/kg scale.
-            Calls Calulate_BMI_Class(bmi_val) to determine and update the users BMI Class.
+            Calls calulate_BMI_class(BMI_val) to determine and update the users BMI Class.
             Activates the export button allowing the user to store their results in a CSV. file.
 
             Exception Handling,
@@ -158,37 +158,40 @@ class BMI:
             """
             try:
 
-                BMI_Stone = (stone.get())
-                BMI_Pounds = (pounds.get())
-                BMI_Feet = (feet.get())
-                BMI_Inches = (inches.get())
+                BMI_stone = (stone.get())
+                BMI_pounds = (pounds.get())
+                BMI_feet = (feet.get())
+                BMI_inches = (inches.get())
                 self.txtBMIResult.delete("1.0", END)
                 self.txtBMIClassResult.delete("1.0", END)
 
-                if BMI_Stone.isdigit() and BMI_Feet.isdigit:
-                    BMI_Stone = float(BMI_Stone)
-                    BMI_Feet = float(BMI_Feet)
+                if BMI_stone.isdigit() and BMI_feet.isdigit:
+                    BMI_stone = float(BMI_stone)
+                    BMI_feet = float(BMI_feet)
                     try:
-                        BMI_Pounds = float(BMI_Pounds)
+                        BMI_pounds = float(BMI_pounds)
                     except ValueError:
-                        BMI_Pounds = 0.0
+                        BMI_pounds = 0.0
                         pounds.set("0")
                     try:
-                        BMI_Inches = float(BMI_Inches)
+                        BMI_inches = float(BMI_inches)
                     except ValueError:
-                        BMI_Inches = 0.0
+                        BMI_inches = 0.0
                         inches.set("0")
-                    BMI_Pounds = BMI_Pounds // 2.2
-                    BMI_Stone = BMI_Stone * 6.35029
-                    BMI_Feet = BMI_Feet * 0.3048
-                    BMI_Inches = BMI_Inches * 0.0254
-                    BMI_KG = BMI_Stone + BMI_Pounds
-                    BMI_metres = BMI_Feet + BMI_Inches
-                    bmi_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
-                    self.txtBMIResult.insert(END, bmi_val)
+
+                    # Converts Imperial measurements to metric before performing calculation
+
+                    BMI_pounds = BMI_pounds // 2.2
+                    BMI_stone = BMI_stone * 6.35029
+                    BMI_feet = BMI_feet * 0.3048
+                    BMI_inches = BMI_inches * 0.0254
+                    BMI_KG = BMI_stone + BMI_pounds
+                    BMI_metres = BMI_feet + BMI_inches
+                    BMI_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
+                    self.txtBMIResult.insert(END, BMI_val)
                     cm_scale.set(BMI_metres * 100)
                     kg_scale.set(BMI_KG)
-                    Calulate_BMI_Class(bmi_val)
+                    calulate_BMI_class(BMI_val)
                     imperial_checker()
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     return True
@@ -212,16 +215,16 @@ class BMI:
             if CHECK_metres <= 0.5 or CHECK_KG <= 1:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
                 reset_toggle()
-            elif CHECK_KG > 200 or CHECK_metres > 99:
+            elif CHECK_KG > 200 or CHECK_metres > 2.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
-        def Calulate_BMI():
+        def calulate_BMI():
             """
             Gets the users inputs from the metric fields, converts them to a float.
             Performs BMI calculation and populates result to "txtBMIResult".
             Updates scale value in metres/kg scale.
-            Calls Calulate_BMI_Class(bmi_val) to determine and update the users BMI Class.
+            Calls calulate_BMI_class(BMI_val) to determine and update the users BMI Class.
             Activates the export button allowing the user to store their results in a CSV. file.
 
             Exception Handling,
@@ -232,15 +235,17 @@ class BMI:
             try:
                 BMI_KG = (kg.get())
                 BMI_metres = (metres.get())
+                self.txtBMIResult.delete("1.0", END)
+                self.txtBMIClassResult.delete("1.0", END)
 
                 if BMI_KG.isdigit() or BMI_KG.isdigit():
                     BMI_KG = float(BMI_KG)
                     BMI_metres = float(BMI_metres)
-                    bmi_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
-                    self.txtBMIResult.insert(END, bmi_val)
+                    BMI_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
+                    self.txtBMIResult.insert(END, BMI_val)
                     cm_scale.set(BMI_metres * 100)
                     kg_scale.set(BMI_KG)
-                    Calulate_BMI_Class(bmi_val)
+                    calulate_BMI_class(BMI_val)
                     metric_checker()
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     return True
@@ -253,7 +258,7 @@ class BMI:
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
-        def Metric_Imperial():
+        def imperial_toggle():
             """
             Toggles the imperial fields to become active and disables the metric
             """
@@ -267,7 +272,7 @@ class BMI:
             self.txt_inches.config(bg='white', state=NORMAL)
             self.txt_feet.config(bg='white', state=NORMAL)
 
-        def Metric_Toggle():
+        def metric_toggle():
             """
              This toggles the metric fields to become active and disables the imperial
             """
@@ -281,48 +286,48 @@ class BMI:
             self.txt_metres.config(bg='white', state=NORMAL)
             self.txt_KG.config(bg='white', state=NORMAL)
 
-        def Calulate_BMI_Class(bmi_val):
+        def calulate_BMI_class(BMI_val):
             """
-            With the bmi_val that is passed through the users BMI is determined with an If statement
+            With the BMI_val that is passed through the users BMI is determined with an If statement
             """
-            if bmi_val <= 18.5:
+            if BMI_val <= 18.5:
                 self.txtBMIClassResult.insert(END, "Under Weight")
-            elif 18.6 < bmi_val < 24.9:
+            elif 18.6 < BMI_val < 24.9:
                 self.txtBMIClassResult.insert(END, "Normal Weight")
-            elif 25 < bmi_val < 29.9:
+            elif 25 < BMI_val < 29.9:
                 self.txtBMIClassResult.insert(END, "Overweight")
             else:
                 self.txtBMIClassResult.insert(END, "Obese")
 
-        def export_exe():
+        def export_CSV():
             """
             Exports the users input/results to a local CSV file
             """
             try:
-                CSV_NAME = (name.get())
-                CSV_AGE = (age.get())
-                CSV_Feet = (feet.get())
-                CSV_Inches = (inches.get())
+                CSV_name = (name.get())
+                CSV_age = (age.get())
+                CSV_feet = (feet.get())
+                CSV_inches = (inches.get())
                 CSV_metres = (metres.get())
-                CSV_KG = (kg.get())
-                CSV_Stone = (stone.get())
-                CSV_Pounds = (pounds.get())
-                bmi_val = self.txtBMIResult.get("1.0", 'end-1c')
-                bmi_class = self.txtBMIClassResult.get("1.0", 'end-1c')
+                CSV_kg = (kg.get())
+                CSV_stone = (stone.get())
+                CSV_pounds = (pounds.get())
+                BMI_val = self.txtBMIResult.get("1.0", 'end-1c')
+                BMI_class = self.txtBMIClassResult.get("1.0", 'end-1c')
                 current_time = datetime.now().time()
 
-                with open('your_bmi_result', 'w', newline='') as f:
+                with open('your_bmi_result.csv', 'w', newline='') as f:
                     thewriter = csv.writer(f)
                     thewriter.writerow(['Name', 'Age', 'BMI', 'BMI Class'])
-                    thewriter.writerow([CSV_NAME, CSV_AGE, bmi_val, bmi_class])
+                    thewriter.writerow([CSV_name, CSV_age, BMI_val, BMI_class])
                     thewriter.writerow([])
 
                     if self.btnImperial["state"] == DISABLED:
-                        thewriter.writerow(['Your height is {} feet and {} inches.'.format(CSV_Feet, CSV_Inches)])
-                        thewriter.writerow(['Your weight is {} stone and {} pounds.'.format(CSV_Stone, CSV_Pounds)])
+                        thewriter.writerow(['Your height is {} feet and {} inches.'.format(CSV_feet, CSV_inches)])
+                        thewriter.writerow(['Your weight is {} stone and {} pounds.'.format(CSV_stone, CSV_pounds)])
                     else:
                         thewriter.writerow(['Your height is {} metres.'.format(CSV_metres)])
-                        thewriter.writerow(['Your weight is {} KGs.'.format(CSV_KG)])
+                        thewriter.writerow(['Your weight is {} KGs.'.format(CSV_kg)])
 
                     thewriter.writerow([])
                     thewriter.writerow(['Time: {}'.format(current_time)])
@@ -366,13 +371,13 @@ class BMI:
 
         self.btnImperial = Button(leftframe3, text="Imperial", padx=4, pady=2, bd=4, width=15, relief="sunken",
                                   state=DISABLED,
-                                  font=('arial', 17, 'bold'), height=1, bg='springgreen', command=Metric_Imperial)
-        self.btnImperial.bind('<Return>', Calulate_BMI)
+                                  font=('arial', 17, 'bold'), height=1, bg='springgreen', command=imperial_toggle)
+        self.btnImperial.bind('<Return>', calulate_BMI)
         self.btnImperial.grid(row=0, column=0)
         self.btnMetric = Button(leftframe3, text="Metric", padx=4, pady=2, bd=4, width=15, relief="raised",
                                 state=NORMAL,
-                                font=('arial', 17, 'bold'), height=1, bg='light coral', command=Metric_Toggle)
-        self.btnMetric.bind('<Return>', Metric_Toggle)
+                                font=('arial', 17, 'bold'), height=1, bg='light coral', command=metric_toggle)
+        self.btnMetric.bind('<Return>', metric_toggle)
         self.btnMetric.grid(row=0, column=1)
 
         # ===== LEFT FRAME 4 =====
@@ -426,7 +431,7 @@ class BMI:
 
         self.btnExport = Button(leftframe7, text="Export Results", padx=4, pady=2, bd=4, width=11, state=DISABLED,
                                 bg='gray', relief="sunken",
-                                font=('arial', 17, 'bold'), height=1, command=export_exe)
+                                font=('arial', 17, 'bold'), height=1, command=export_CSV)
         self.btnExport.grid(row=1, column=2)
 
         # ===== LEFT FRAME 8 =====
