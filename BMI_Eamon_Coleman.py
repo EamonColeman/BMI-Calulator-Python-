@@ -136,7 +136,7 @@ class BMI:
             if check_feet <= 2 or check_stone <= 0.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
                 reset_toggle()
-            elif check_feet > 9 or check_stone > 99:
+            elif check_feet > 9 or check_stone > 30:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
@@ -238,7 +238,7 @@ class BMI:
                 self.txtBMIResult.delete("1.0", END)
                 self.txtBMIClassResult.delete("1.0", END)
 
-                if BMI_KG.isdigit() or BMI_KG.isdigit():
+                if BMI_KG.isdigit() and BMI_metres.isdigit():
                     BMI_KG = float(BMI_KG)
                     BMI_metres = float(BMI_metres)
                     BMI_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
