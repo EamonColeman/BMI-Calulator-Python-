@@ -140,6 +140,7 @@ class BMI:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
+
         def Calulate_BMI_IMPERIAL():
             """
             Gets the users inputs from the imperial fields, converts them to a float then converts them to their metric
@@ -153,20 +154,31 @@ class BMI:
             1. If you user enters a zero for their height this will be caught with the except ZeroDivisionError line.
             2. If a none digit is entered by the user this be caught in the .isdigit() line.
             3. A minimum/maximum amount has been defined in the "checker" functions and will be caught if entered.
+            4. If the user has not specified a value for pounds/inches it will default to zero.
             """
             try:
+
                 BMI_Stone = (stone.get())
                 BMI_Pounds = (pounds.get())
                 BMI_Feet = (feet.get())
                 BMI_Inches = (inches.get())
-                self.txtBMIClassResult.delete("1.0", END)
-                self.txtBMIResult.delete("1.0", END)
 
-                if BMI_Stone.isdigit() and BMI_Feet.isdigit() and BMI_Pounds.isdigit() and BMI_Inches.isdigit():
+
+
+                if BMI_Stone.isdigit() and BMI_Feet.isdigit():
+
                     BMI_Stone = float(BMI_Stone)
-                    BMI_Pounds = float(BMI_Pounds)
                     BMI_Feet = float(BMI_Feet)
-                    BMI_Inches = float(BMI_Inches)
+                    try:
+                        BMI_Pounds = float(BMI_Pounds)
+                    except ValueError:
+                        BMI_Pounds = 0.0
+                        pounds.set("0")
+                    try:
+                        BMI_Inches = float(BMI_Inches)
+                    except ValueError:
+                        BMI_Inches = 0.0
+                        inches.set("0")
                     BMI_Pounds = BMI_Pounds // 2.2
                     BMI_Stone = BMI_Stone * 6.35029
                     BMI_Feet = BMI_Feet * 0.3048
@@ -221,8 +233,6 @@ class BMI:
             try:
                 BMI_KG = (kg.get())
                 BMI_metres = (metres.get())
-                self.txtBMIClassResult.delete("1.0", END)
-                self.txtBMIResult.delete("1.0", END)
 
                 if BMI_KG.isdigit() or BMI_KG.isdigit():
                     BMI_KG = float(BMI_KG)
