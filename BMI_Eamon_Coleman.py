@@ -162,10 +162,10 @@ class BMI:
                 BMI_Pounds = (pounds.get())
                 BMI_Feet = (feet.get())
                 BMI_Inches = (inches.get())
+                self.txtBMIResult.delete("1.0", END)
+                self.txtBMIClassResult.delete("1.0", END)
 
-
-
-                if BMI_Stone.isdigit() and BMI_Feet.isdigit():
+                if BMI_Stone.isdigit() and BMI_Feet.isdigit:
 
                     BMI_Stone = float(BMI_Stone)
                     BMI_Feet = float(BMI_Feet)
