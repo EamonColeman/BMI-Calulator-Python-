@@ -125,7 +125,7 @@ class BMI:
             else:
                 Calulate_BMI()
 
-        def minimum_checker_imperial():
+        def imperial_checker():
             """
             Catches if the user has input a too small/large value in the imperial fields
             """
@@ -154,7 +154,7 @@ class BMI:
             1. If you user enters a zero for their height this will be caught with the except ZeroDivisionError line.
             2. If a none digit is entered by the user this be caught in the .isdigit() line.
             3. A minimum/maximum amount has been defined in the "checker" functions and will be caught if entered.
-            4. If the user has not specified a value for pounds/inches it will default to zero.
+            4. If the user has not specified a value for pounds/inches it will default to zero. (ValueError).
             """
             try:
 
@@ -166,7 +166,6 @@ class BMI:
                 self.txtBMIClassResult.delete("1.0", END)
 
                 if BMI_Stone.isdigit() and BMI_Feet.isdigit:
-
                     BMI_Stone = float(BMI_Stone)
                     BMI_Feet = float(BMI_Feet)
                     try:
@@ -190,7 +189,7 @@ class BMI:
                     cm_scale.set(BMI_metres * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
-                    minimum_checker_imperial()
+                    imperial_checker()
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     return True
 
@@ -202,7 +201,7 @@ class BMI:
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
 
-        def minimum_checker_metric():
+        def metric_checker():
             """
             Catches if the user has input a too small/large value in the imperial fields
             """
@@ -242,7 +241,7 @@ class BMI:
                     cm_scale.set(BMI_metres * 100)
                     kg_scale.set(BMI_KG)
                     Calulate_BMI_Class(bmi_val)
-                    minimum_checker_metric()
+                    metric_checker()
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     return True
 
