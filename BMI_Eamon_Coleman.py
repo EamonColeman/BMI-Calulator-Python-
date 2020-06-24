@@ -315,7 +315,7 @@ class BMI:
 
         def export_CSV():
             """
-            Exports the users input/results to a local CSV file
+            Exports the users input/results to a local CSV file as well as the current date/time when exported.
             """
             try:
                 CSV_name = (name.get())
