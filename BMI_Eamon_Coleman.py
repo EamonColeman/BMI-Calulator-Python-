@@ -337,6 +337,9 @@ class BMI:
             self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
 
         def reset_after_min_max():
+            """
+            Resets all field entries specify after the min/max error is hit.
+            """
             cm_scale.set(0)
             kg_scale.set(0)
             self.txtBMIResult.delete("1.0", END)
