@@ -2,8 +2,15 @@ import tkinter
 from tkinter import *
 from tkinter import messagebox
 from datetime import datetime
+from datetime import date
 
 import csv
+
+"""
+    Name: Eamon Coleman
+    Email: Eamon.Coleman@sap.com
+    Number: 087 381 8096
+"""
 
 
 class BMI:
@@ -188,13 +195,13 @@ class BMI:
                     self.txtBMIResult.insert(END, BMI_val)
                     cm_scale.set(BMI_Metres * 100)
                     kg_scale.set(BMI_KG)
-                    calulate_BMI_class(BMI_val)                   
+                    calulate_BMI_class(BMI_val)
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     imperial_checker()
                     return True
 
                 else:
-                    tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in all fields.")
+                    tkinter.messagebox.showwarning("Body Mass Index", "Please enter a valid number in both fields.")
                     self.txtBMIResult.delete("1.0", END)
                     self.txtBMIClassResult.delete("1.0", END)
                     self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
@@ -202,7 +209,7 @@ class BMI:
                     kg_scale.set(0)
 
             except ZeroDivisionError:
-                tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
+                tkinter.messagebox.showwarning("Body Mass Index", "Error: Number cannot be divided by Zero.")
 
         def metric_checker():
             """
@@ -249,13 +256,13 @@ class BMI:
                     self.txtBMIResult.insert(END, BMI_val)
                     cm_scale.set(BMI_CMs * 100)
                     kg_scale.set(BMI_KG)
-                    calulate_BMI_class(BMI_val)                 
+                    calulate_BMI_class(BMI_val)
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
                     metric_checker()
                     return True
 
                 else:
-                    tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in both fields.")
+                    tkinter.messagebox.showwarning("Body Mass Index", "Please enter a valid number in both fields.")
                     self.txtBMIResult.delete("1.0", END)
                     self.txtBMIClassResult.delete("1.0", END)
                     self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
@@ -263,7 +270,7 @@ class BMI:
                     kg_scale.set(0)
 
             except ZeroDivisionError:
-                tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
+                tkinter.messagebox.showwarning("Body Mass Index", "Error: Number cannot be divided by Zero.")
 
         def imperial_toggle():
             """
@@ -321,6 +328,8 @@ class BMI:
                 CSV_pounds = (pounds.get())
                 BMI_val = self.txtBMIResult.get("1.0", 'end-1c')
                 BMI_class = self.txtBMIClassResult.get("1.0", 'end-1c')
+                today = date.today()
+
                 current_time = datetime.now().time()
 
                 with open('your_bmi_result.csv', 'w', newline='') as f:
@@ -337,6 +346,7 @@ class BMI:
                         thewriter.writerow(['Your weight is {} KGs.'.format(CSV_kg)])
 
                     thewriter.writerow([])
+                    thewriter.writerow(['Date: {}'.format(today)])
                     thewriter.writerow(['Time: {}'.format(current_time)])
 
                 tkinter.messagebox.showinfo("Body Mass Index", "Your results have been saved to a CSV file!")
@@ -418,7 +428,7 @@ class BMI:
         self.lb_CMs = Label(leftframe5, text=" or CMs", font=('arial', 15, 'bold'), width=8, bd=2, justify=LEFT)
         self.lb_CMs.grid(row=1, column=4, padx=5)
         self.txt_CMs = Entry(leftframe5, textvariable=CMs, font=('arial', 15, 'bold'), bd=5, width=7, bg='gray',
-                            state=DISABLED, justify=LEFT)
+                             state=DISABLED, justify=LEFT)
         self.txt_CMs.grid(row=1, column=5, pady=5)
 
         # ===== LEFT FRAME 6 =====
