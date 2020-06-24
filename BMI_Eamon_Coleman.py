@@ -74,7 +74,7 @@ class BMI:
         kg = StringVar()
         feet = StringVar()
         inches = StringVar()
-        metres = StringVar()
+        CMs = StringVar()
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
 
@@ -91,7 +91,7 @@ class BMI:
             pounds.set("")
             stone.set("")
             kg.set("")
-            metres.set("")
+            CMs.set("")
             name.set("")
             age.set("")
             cm_scale.set(0)
@@ -109,7 +109,7 @@ class BMI:
             pounds.set("")
             stone.set("")
             kg.set("")
-            metres.set("")
+            CMs.set("")
             cm_scale.set(0)
             kg_scale.set(0)
             self.txtBMIResult.delete("1.0", END)
@@ -136,7 +136,7 @@ class BMI:
             if check_feet <= 2 or check_stone <= 0.5:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
                 reset_toggle()
-            elif check_feet > 9 or check_stone > 30:
+            elif check_feet > 9 or check_stone > 99:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
@@ -144,9 +144,9 @@ class BMI:
         def calulate_BMI_IMPERIAL():
             """
             Gets the users inputs from the imperial fields, converts them to a float then converts them to their metric
-            value. (Feet/Inches to Metres and Stones/Pounds to Kg).
+            value. (Feet/Inches to CMs and Stones/Pounds to Kg).
             Performs BMI calculation and populates result to "txtBMIResult".
-            Updates scale value in metres/kg scale.
+            Updates scale value in CMs/kg scale.
             Calls calulate_BMI_class(BMI_val) to determine and update the users BMI Class.
             Activates the export button allowing the user to store their results in a CSV. file.
 
@@ -165,7 +165,7 @@ class BMI:
                 self.txtBMIResult.delete("1.0", END)
                 self.txtBMIClassResult.delete("1.0", END)
 
-                if BMI_stone.isdigit() and BMI_feet.isdigit:
+                if BMI_stone.isdigit() and BMI_feet.isdigit():
                     BMI_stone = float(BMI_stone)
                     BMI_feet = float(BMI_feet)
                     try:
@@ -186,20 +186,24 @@ class BMI:
                     BMI_feet = BMI_feet * 0.3048
                     BMI_inches = BMI_inches * 0.0254
                     BMI_KG = BMI_stone + BMI_pounds
-                    BMI_metres = BMI_feet + BMI_inches
-                    BMI_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
+                    BMI_CMs = BMI_feet + BMI_inches
+                    BMI_val = float('%.2f' % (BMI_KG / (BMI_CMs * BMI_CMs)))
                     self.txtBMIResult.insert(END, BMI_val)
-                    cm_scale.set(BMI_metres * 100)
+                    cm_scale.set(BMI_CMs * 100)
                     kg_scale.set(BMI_KG)
-                    calulate_BMI_class(BMI_val)
-                    imperial_checker()
+                    calulate_BMI_class(BMI_val)                   
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
+                    imperial_checker()
                     return True
 
                 else:
                     tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in all fields.")
                     self.txtBMIResult.delete("1.0", END)
                     self.txtBMIClassResult.delete("1.0", END)
+                    self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
+                    cm_scale.set(0)
+                    kg_scale.set(0)
+
 
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
@@ -209,13 +213,13 @@ class BMI:
             Catches if the user has input a too small/large value in the imperial fields
             """
             CHECK_KG = (kg.get())
-            CHECK_metres = (metres.get())
+            CHECK_CMs = (CMs.get())
             CHECK_KG = float(CHECK_KG)
-            CHECK_metres = float(CHECK_metres)
-            if CHECK_metres <= 0.5 or CHECK_KG <= 1:
+            CHECK_CMs = float(CHECK_CMs)
+            if CHECK_CMs <= 0.5 or CHECK_KG <= 1:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too small to calculate BMI.")
                 reset_toggle()
-            elif CHECK_KG > 200 or CHECK_metres > 2.5:
+            elif CHECK_KG > 200 or CHECK_CMs > 300:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
@@ -223,7 +227,7 @@ class BMI:
             """
             Gets the users inputs from the metric fields, converts them to a float.
             Performs BMI calculation and populates result to "txtBMIResult".
-            Updates scale value in metres/kg scale.
+            Updates scale value in CMs/kg scale.
             Calls calulate_BMI_class(BMI_val) to determine and update the users BMI Class.
             Activates the export button allowing the user to store their results in a CSV. file.
 
@@ -233,27 +237,34 @@ class BMI:
             3. A minimum/maximum amount has been defined in the "checker" functions and will be caught if entered.
             """
             try:
+
                 BMI_KG = (kg.get())
-                BMI_metres = (metres.get())
+                BMI_CMs = (CMs.get())
+
                 self.txtBMIResult.delete("1.0", END)
                 self.txtBMIClassResult.delete("1.0", END)
 
-                if BMI_KG.isdigit() and BMI_metres.isdigit():
+                if BMI_KG.isdigit() and BMI_CMs.isdigit():
+
                     BMI_KG = float(BMI_KG)
-                    BMI_metres = float(BMI_metres)
-                    BMI_val = float('%.2f' % (BMI_KG / (BMI_metres * BMI_metres)))
+                    BMI_CMs = float(BMI_CMs)
+                    BMI_CMs =  BMI_CMs / 100
+                    BMI_val = float('%.2f' % (BMI_KG / (BMI_CMs * BMI_CMs)))
                     self.txtBMIResult.insert(END, BMI_val)
-                    cm_scale.set(BMI_metres * 100)
+                    cm_scale.set(BMI_CMs * 100)
                     kg_scale.set(BMI_KG)
-                    calulate_BMI_class(BMI_val)
-                    metric_checker()
+                    calulate_BMI_class(BMI_val)                 
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
+                    metric_checker()
                     return True
 
                 else:
                     tkinter.messagebox.showwarning("Body Mass Index", "Please Enter a Valid Number in both fields.")
                     self.txtBMIResult.delete("1.0", END)
                     self.txtBMIClassResult.delete("1.0", END)
+                    self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
+                    cm_scale.set(0)
+                    kg_scale.set(0)
 
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
@@ -265,7 +276,7 @@ class BMI:
             self.btnMetric.config(state=NORMAL, bg='light coral', relief="raised")
             self.btnImperial.config(state=DISABLED, bg='springgreen', relief="sunken")
             reset_toggle()
-            self.txt_metres.config(bg='gray', state=DISABLED)
+            self.txt_CMs.config(bg='gray', state=DISABLED)
             self.txt_KG.config(bg='gray', state=DISABLED)
             self.txt_stones.config(bg='white', state=NORMAL)
             self.txt_pounds.config(bg='white', state=NORMAL)
@@ -283,7 +294,7 @@ class BMI:
             self.txt_pounds.config(bg='gray', state=DISABLED)
             self.txt_inches.config(bg='gray', state=DISABLED)
             self.txt_feet.config(bg='gray', state=DISABLED)
-            self.txt_metres.config(bg='white', state=NORMAL)
+            self.txt_CMs.config(bg='white', state=NORMAL)
             self.txt_KG.config(bg='white', state=NORMAL)
 
         def calulate_BMI_class(BMI_val):
@@ -308,7 +319,7 @@ class BMI:
                 CSV_age = (age.get())
                 CSV_feet = (feet.get())
                 CSV_inches = (inches.get())
-                CSV_metres = (metres.get())
+                CSV_CMs = (CMs.get())
                 CSV_kg = (kg.get())
                 CSV_stone = (stone.get())
                 CSV_pounds = (pounds.get())
@@ -326,7 +337,7 @@ class BMI:
                         thewriter.writerow(['Your height is {} feet and {} inches.'.format(CSV_feet, CSV_inches)])
                         thewriter.writerow(['Your weight is {} stone and {} pounds.'.format(CSV_stone, CSV_pounds)])
                     else:
-                        thewriter.writerow(['Your height is {} metres.'.format(CSV_metres)])
+                        thewriter.writerow(['Your height is {} CMs.'.format(CSV_CMs)])
                         thewriter.writerow(['Your weight is {} KGs.'.format(CSV_kg)])
 
                     thewriter.writerow([])
@@ -408,11 +419,11 @@ class BMI:
         self.txt_inches = Entry(leftframe5, textvariable=inches, font=('arial', 15, 'bold'), bd=5, width=7,
                                 justify=LEFT)
         self.txt_inches.grid(row=1, column=3, pady=5)
-        self.lb_metres = Label(leftframe5, text=" or Metres", font=('arial', 15, 'bold'), width=8, bd=2, justify=LEFT)
-        self.lb_metres.grid(row=1, column=4, padx=5)
-        self.txt_metres = Entry(leftframe5, textvariable=metres, font=('arial', 15, 'bold'), bd=5, width=7, bg='gray',
+        self.lb_CMs = Label(leftframe5, text=" or CMs", font=('arial', 15, 'bold'), width=8, bd=2, justify=LEFT)
+        self.lb_CMs.grid(row=1, column=4, padx=5)
+        self.txt_CMs = Entry(leftframe5, textvariable=CMs, font=('arial', 15, 'bold'), bd=5, width=7, bg='gray',
                             state=DISABLED, justify=LEFT)
-        self.txt_metres.grid(row=1, column=5, pady=5)
+        self.txt_CMs.grid(row=1, column=5, pady=5)
 
         # ===== LEFT FRAME 6 =====
 
