@@ -78,8 +78,6 @@ class BMI:
         cm_scale = DoubleVar()
         kg_scale = DoubleVar()
 
-
-
         # =============================  FUNCTIONS    ===================================
 
         def reset():
@@ -121,9 +119,9 @@ class BMI:
             Determines if the user has selected imperial or metric
             """
             if self.btnImperial["state"] == DISABLED:
-                calulate_BMI_IMPERIAL()
+                calulate_BMI_imperial()
             else:
-                calulate_BMI()
+                calulate_BMI_metric()
 
         def imperial_checker():
             """
@@ -140,8 +138,7 @@ class BMI:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
-
-        def calulate_BMI_IMPERIAL():
+        def calulate_BMI_imperial():
             """
             Gets the users inputs from the imperial fields, converts them to a float then converts them to their metric
             value. (Feet/Inches to CMs and Stones/Pounds to Kg).
@@ -186,10 +183,10 @@ class BMI:
                     BMI_feet = BMI_feet * 0.3048
                     BMI_inches = BMI_inches * 0.0254
                     BMI_KG = BMI_stone + BMI_pounds
-                    BMI_CMs = BMI_feet + BMI_inches
-                    BMI_val = float('%.2f' % (BMI_KG / (BMI_CMs * BMI_CMs)))
+                    BMI_Metres = BMI_feet + BMI_inches
+                    BMI_val = float('%.2f' % (BMI_KG / (BMI_Metres * BMI_Metres)))
                     self.txtBMIResult.insert(END, BMI_val)
-                    cm_scale.set(BMI_CMs * 100)
+                    cm_scale.set(BMI_Metres * 100)
                     kg_scale.set(BMI_KG)
                     calulate_BMI_class(BMI_val)                   
                     self.btnExport.config(state=NORMAL, bg='goldenrod', relief="raised")
@@ -203,7 +200,6 @@ class BMI:
                     self.btnExport.config(state=DISABLED, bg='gray', relief="sunken")
                     cm_scale.set(0)
                     kg_scale.set(0)
-
 
             except ZeroDivisionError:
                 tkinter.messagebox.showwarning("Body Mass Index", "Number cannot be divided by Zero.")
@@ -223,7 +219,7 @@ class BMI:
                 tkinter.messagebox.showwarning("Body Mass Index", "Weight/Height too large to calculate BMI.")
                 reset_toggle()
 
-        def calulate_BMI():
+        def calulate_BMI_metric():
             """
             Gets the users inputs from the metric fields, converts them to a float.
             Performs BMI calculation and populates result to "txtBMIResult".
@@ -248,7 +244,7 @@ class BMI:
 
                     BMI_KG = float(BMI_KG)
                     BMI_CMs = float(BMI_CMs)
-                    BMI_CMs =  BMI_CMs / 100
+                    BMI_CMs = BMI_CMs / 100
                     BMI_val = float('%.2f' % (BMI_KG / (BMI_CMs * BMI_CMs)))
                     self.txtBMIResult.insert(END, BMI_val)
                     cm_scale.set(BMI_CMs * 100)
@@ -383,7 +379,7 @@ class BMI:
         self.btnImperial = Button(leftframe3, text="Imperial", padx=4, pady=2, bd=4, width=15, relief="sunken",
                                   state=DISABLED,
                                   font=('arial', 17, 'bold'), height=1, bg='springgreen', command=imperial_toggle)
-        self.btnImperial.bind('<Return>', calulate_BMI)
+
         self.btnImperial.grid(row=0, column=0)
         self.btnMetric = Button(leftframe3, text="Metric", padx=4, pady=2, bd=4, width=15, relief="raised",
                                 state=NORMAL,
