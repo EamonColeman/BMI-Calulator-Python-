@@ -328,8 +328,7 @@ class BMI:
                 CSV_pounds = (pounds.get())
                 BMI_val = self.txtBMIResult.get("1.0", 'end-1c')
                 BMI_class = self.txtBMIClassResult.get("1.0", 'end-1c')
-                today = date.today()
-
+                current_day = date.today()
                 current_time = datetime.now().time()
 
                 with open('your_bmi_result.csv', 'w', newline='') as f:
@@ -346,7 +345,7 @@ class BMI:
                         thewriter.writerow(['Your weight is {} KGs.'.format(CSV_kg)])
 
                     thewriter.writerow([])
-                    thewriter.writerow(['Date: {}'.format(today)])
+                    thewriter.writerow(['Date: {}'.format(current_day)])
                     thewriter.writerow(['Time: {}'.format(current_time)])
 
                 tkinter.messagebox.showinfo("Body Mass Index", "Your results have been saved to a CSV file!")
